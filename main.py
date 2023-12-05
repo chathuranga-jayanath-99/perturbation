@@ -20,5 +20,5 @@ if __name__ == '__main__':
                 os.system(execution_command)   
 
                 filname_without_ext = file.name.split('.')[0]
-                os.system(f'mv ./{filname_without_ext}Perturbation.java ./../perturbed_samples/{filname_without_ext}Perturbation.java')
+                os.system(f'mv ./{samples_dir_path}/{filname_without_ext}Perturbation.java ./{perturbed_samples_dir_path}')
     # read perurb file and generate corrupt file
