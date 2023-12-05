@@ -34,6 +34,7 @@ if __name__ == '__main__':
                 
                 perturbed_file_path = f'./{perturbed_samples_dir_path}/{perturbed_filename}'
                 original_file_path = f'./{samples_dir_path}/{original_filename}'
+                corrupt_file_path = f'./{corrupted_samples_dir_path}/{original_filename}'
 
                 with open(original_file_path) as of:
                     original_file_lines = of.readlines()
@@ -61,4 +62,6 @@ if __name__ == '__main__':
                     corrupt_file_lines[corrupt_line_no] = corrupt_line_code
 
                     print(corrupt_file_lines)
-            
+
+                    with open(corrupt_file_path, 'w') as cf:
+                        cf.writelines(''.join(corrupt_file_lines))
