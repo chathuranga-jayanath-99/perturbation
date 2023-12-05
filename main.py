@@ -25,22 +25,23 @@ if __name__ == '__main__':
     # read perurb file and generate corrupt file
     with os.scandir(perturbed_samples_dir_path) as perturbed_files:
         for perturbed_file in perturbed_files:
-            perturbed_filename = perturbed_file.name
-            original_filename = perturbed_filename.replace('Perturbation', '')
-            print(f'perturbed_filename: {perturbed_filename}')
-            print(f'original_filename: {original_filename}')
-            
-            perturbed_file_path = f'./{perturbed_samples_dir_path}/{perturbed_filename}'
-            original_file_path = f'./{samples_dir_path}/{original_filename}'
+            if (perturbed_file.name.endswith('.java')):
+                perturbed_filename = perturbed_file.name
+                original_filename = perturbed_filename.replace('Perturbation', '')
+                print(f'perturbed_filename: {perturbed_filename}')
+                print(f'original_filename: {original_filename}')
+                
+                perturbed_file_path = f'./{perturbed_samples_dir_path}/{perturbed_filename}'
+                original_file_path = f'./{samples_dir_path}/{original_filename}'
 
-            with open(perturbed_file_path) as pf:
-                perturbed_file_lines = pf.readlines()
-                print(f'perturbed_file_lines: {perturbed_file_lines}')
-                # for perturbed_file_line in perturbed_file_lines:
-                perturbed_file_line = perturbed_file_lines[0]
-                perturbed_file_infos = perturbed_file_line.split('^')
+                with open(perturbed_file_path) as pf:
+                    perturbed_file_lines = pf.readlines()
+                    print(f'perturbed_file_lines: {perturbed_file_lines}')
+                    # for perturbed_file_line in perturbed_file_lines:
+                    perturbed_file_line = perturbed_file_lines[0]
+                    perturbed_file_infos = perturbed_file_line.split('^')
 
-                action = perturbed_file_infos[0]
-                corrupt_code = perturbed_file_infos[1]
-                print(perturbed_file_infos)
+                    action = perturbed_file_infos[0]
+                    corrupt_code = perturbed_file_infos[1]
+                    print(perturbed_file_infos)
             
