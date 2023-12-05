@@ -1,4 +1,5 @@
 import os 
+import re 
 
 samples_dir_path = './samples/'
 perturbed_samples_dir_path = './perturbed_samples/'
@@ -34,14 +35,30 @@ if __name__ == '__main__':
                 perturbed_file_path = f'./{perturbed_samples_dir_path}/{perturbed_filename}'
                 original_file_path = f'./{samples_dir_path}/{original_filename}'
 
+                with open(original_file_path) as of:
+                    original_file_lines = of.readlines()
+
+
                 with open(perturbed_file_path) as pf:
                     perturbed_file_lines = pf.readlines()
                     print(f'perturbed_file_lines: {perturbed_file_lines}')
+                    
                     # for perturbed_file_line in perturbed_file_lines:
                     perturbed_file_line = perturbed_file_lines[0]
                     perturbed_file_infos = perturbed_file_line.split('^')
 
                     action = perturbed_file_infos[0]
-                    corrupt_code = perturbed_file_infos[1]
-                    print(perturbed_file_infos)
+                    corrupt_line_code = perturbed_file_infos[1]
+                    corrupt_line_no = int(perturbed_file_infos[2]) - 1
+                    
+                    original_line_code = original_file_lines[corrupt_line_no]
+                    spaces_match = re.match(r'^\s*', original_line_code)
+                    original_line_spaces_count = len(spaces_match.group(0))
+
+                    corrupt_line_code = ' '*original_line_spaces_count + corrupt_line_code + '\n'
+
+                    corrupt_file_lines = original_file_lines[:]
+                    corrupt_file_lines[corrupt_line_no] = corrupt_line_code
+
+                    print(corrupt_file_lines)
             
