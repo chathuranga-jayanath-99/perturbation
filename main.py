@@ -19,5 +19,6 @@ if __name__ == '__main__':
                 execution_command = f'{base_command} {file_path} {arg_buglab}'
                 os.system(execution_command)   
 
-                os.system(f'mv ./{file.name.split('.')[0]}Perturbation.java ./../perturbed_samples/{file.name.split(.)[0]}Perturbation.java')
+                filname_without_ext = file.name.split('.')[0]
+                os.system(f'mv ./{filname_without_ext}Perturbation.java ./../perturbed_samples/{filname_without_ext}Perturbation.java')
     # read perurb file and generate corrupt file
