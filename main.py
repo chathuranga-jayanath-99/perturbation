@@ -31,10 +31,11 @@ if __name__ == '__main__':
                 original_filename = perturbed_filename.replace('Perturbation', '')
                 print(f'perturbed_filename: {perturbed_filename}')
                 print(f'original_filename: {original_filename}')
+                original_filename_without_ext = original_filename.split('.')[0]
                 
                 perturbed_file_path = f'./{perturbed_samples_dir_path}/{perturbed_filename}'
                 original_file_path = f'./{samples_dir_path}/{original_filename}'
-                corrupt_file_path = f'./{corrupted_samples_dir_path}/{original_filename}'
+                corrupt_dir_path = f'./{corrupted_samples_dir_path}/{original_filename_without_ext}'
 
                 with open(original_file_path) as of:
                     original_file_lines = of.readlines()
@@ -62,6 +63,6 @@ if __name__ == '__main__':
                     corrupt_file_lines[corrupt_line_no] = corrupt_line_code
 
                     print(corrupt_file_lines)
-
+                    corrupt_file_path = corrupt_dir_path + '/1.java'
                     with open(corrupt_file_path, 'w') as cf:
                         cf.writelines(''.join(corrupt_file_lines))
