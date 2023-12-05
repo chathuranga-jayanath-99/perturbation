@@ -43,8 +43,10 @@ if __name__ == '__main__':
 
                 with open(perturbed_file_path) as pf:
                     perturbed_file_lines = pf.readlines()
-                    print(f'perturbed_file_lines: {perturbed_file_lines}')
-                    
+                    print('***start perturbed_file_lines***')
+                    for pfl in perturbed_file_lines:
+                        print(pfl)
+                    print('***end perturbed_file_lines***')
                     for i in range(len(perturbed_file_lines)):
                         perturbed_file_line = perturbed_file_lines[i]
                         perturbed_file_infos = perturbed_file_line.split('^')
