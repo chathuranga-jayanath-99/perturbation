@@ -8,4 +8,6 @@ execution_command = 'timeout 600 java -jar ./perturbation_model/target/perturbat
 
 if __name__ == '__main__':
     with os.scandir(samples_dir_path) as entries:
-        print(entries)
+        for entry in entries:
+            print(entry.name)
+        
