@@ -62,6 +62,7 @@ if __name__ == '__main__':
                         corrupt_file_lines = original_file_lines[:]
                         corrupt_file_lines[corrupt_line_no] = corrupt_line_code
 
+                        print('***corrupt file lines***')
                         print(corrupt_file_lines)
                         corrupt_file_path = corrupt_dir_path + f'/{i+1}.java'
                         with open(corrupt_file_path, 'w') as cf:
