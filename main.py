@@ -3,7 +3,7 @@ import re
 
 samples_dir_path = './samples/'
 perturbed_samples_dir_path = './perturbed_samples/'
-corrupted_samples_dir_path = './corrupted_samples/'
+corrupted_samples_dir_path = './corrupted_samples'
 
 arg_selfapr = 'SelfAPR'
 arg_buglab = 'BugLab'
@@ -36,6 +36,7 @@ if __name__ == '__main__':
                 perturbed_file_path = f'./{perturbed_samples_dir_path}/{perturbed_filename}'
                 original_file_path = f'./{samples_dir_path}/{original_filename}'
                 corrupt_dir_path = f'./{corrupted_samples_dir_path}/{original_filename_without_ext}'
+                os.makedirs(corrupt_dir_path)
 
                 with open(original_file_path) as of:
                     original_file_lines = of.readlines()
