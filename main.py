@@ -27,6 +27,8 @@ if __name__ == '__main__':
         for perturbed_file in perturbed_files:
             perturbed_filename = perturbed_file.name
             original_filename = perturbed_filename.replace('Perturbation', '')
+            print(f'perturbed_filename: {perturbed_filename}')
+            print(f'original_filename: {original_filename}')
             
             perturbed_file_path = f'./{perturbed_samples_dir_path}/{perturbed_filename}'
             original_file_path = f'./{samples_dir_path}/{original_filename}'
