@@ -48,9 +48,10 @@ if __name__ == '__main__':
                     print(len(perturbed_file_lines))
                     print('***end perturbed_file_lines***')
                     
-                    try: 
-                        corrupt_files_count = 0
-                        for i in range(len(perturbed_file_lines)):
+                     
+                    corrupt_files_count = 0
+                    for i in range(len(perturbed_file_lines)):
+                        try:
                             perturbed_file_line = perturbed_file_lines[i]
                             perturbed_file_infos = perturbed_file_line.split('^')
 
@@ -73,5 +74,6 @@ if __name__ == '__main__':
                             with open(corrupt_file_path, 'w') as cf:
                                 cf.writelines(''.join(corrupt_file_lines))
                             corrupt_files_count += 1
-                    
+                        except Exception as e:
+                            print(f'Unexpected error: {e}')
                     print(f'corrupt_files_count: {corrupt_files_count}')
