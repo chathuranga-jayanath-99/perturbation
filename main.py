@@ -10,6 +10,37 @@ arg_buglab = 'BugLab'
 
 base_command = 'timeout 600 java -jar ./perturbation_model/target/perturbation-0.0.1-SNAPSHOT-jar-with-dependencies.jar'
 
+def handle_move_statement_action(perturbed_file_infos, original_file_lines):
+    corrupt_file_lines = original_file_lines[:]
+    corrupt_combined_lines = perturbed_file_infos[1]
+
+    moved_line_no_1 = int(perturbed_file_infos[2]) - 1
+    moved_line_no_2 = int(perturbed_file_infos[3]) - 1
+
+    original_line_1 = original_file_lines[moved_line_no_1]
+    original_line_2 = original_file_lines[moved_line_no_2]
+    
+    spaces_count_1 = re.match(r'^\s*', original_line_1)
+    spaces_count_2 = re.match(r'^\s*', original_line_2)
+    
+    try:
+        corrupt_splits = corrupt_combined_lines.split(';')
+        corrupt_line_1 = corrupt_splits[0].strip()
+        corrupt_line_2 = corrupt_splits[1].strip()
+
+        if (corrupt_line_1 == '' or corrupt_line_2 == ''):
+            return None 
+        
+        corrupt_line_1 = ' ' * spaces_count_1 + corrupt_line_1 + ';\n'
+        corrupt_line_2 = ' ' * spaces_count_2 + corrupt_line_2 + ';\n'
+
+        corrupt_file_lines[moved_line_no_1] = corrupt_line_1 
+        corrupt_file_lines[moved_line_no_2] = corrupt_line_2
+
+        return corrupt_file_lines
+    except Exception as e:
+        print(f'Unexpected error: {e}')
+
 if __name__ == '__main__':
     with os.scandir(samples_dir_path) as files:
         for file in files:
@@ -56,20 +87,25 @@ if __name__ == '__main__':
                             perturbed_file_infos = perturbed_file_line.split('^')
 
                             action = perturbed_file_infos[0]
-                            corrupt_line_code = perturbed_file_infos[1]
-                            corrupt_line_no = int(perturbed_file_infos[2]) - 1
-                            
-                            original_line_code = original_file_lines[corrupt_line_no]
-                            spaces_match = re.match(r'^\s*', original_line_code)
-                            original_line_spaces_count = len(spaces_match.group(0))
+                            if 'P10' in action:
+                                corrupt_file_lines = handle_move_statement_action(perturbed_file_infos, original_file_lines)
+                                if corrupt_file_lines is None:
+                                    continue
+                            else:
+                                corrupt_line_code = perturbed_file_infos[1]
+                                corrupt_line_no = int(perturbed_file_infos[2]) - 1
+                                
+                                original_line_code = original_file_lines[corrupt_line_no]
+                                spaces_match = re.match(r'^\s*', original_line_code)
+                                original_line_spaces_count = len(spaces_match.group(0))
 
-                            corrupt_line_code = ' '*original_line_spaces_count + corrupt_line_code + '\n'
+                                corrupt_line_code = ' '*original_line_spaces_count + corrupt_line_code + '\n'
 
-                            corrupt_file_lines = original_file_lines[:]
-                            corrupt_file_lines[corrupt_line_no] = corrupt_line_code
+                                corrupt_file_lines = original_file_lines[:]
+                                corrupt_file_lines[corrupt_line_no] = corrupt_line_code
 
-                            print('***corrupt file lines***')
-                            print(corrupt_file_lines)
+                            # print('***corrupt file lines***')
+                            # print(corrupt_file_lines)
                             corrupt_file_path = corrupt_dir_path + f'/{i+1}.java'
                             with open(corrupt_file_path, 'w') as cf:
                                 cf.writelines(''.join(corrupt_file_lines))
