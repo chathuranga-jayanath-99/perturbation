@@ -41,6 +41,31 @@ def handle_move_statement_action(perturbed_file_infos, original_file_lines):
     except Exception as e:
         print(f'Unexpected error: {e}')
 
+def handle_transplant_statement(perturbed_file_infos, original_file_lines):
+    corrupt_file_lines = original_file_lines[:]
+    corrupt_combined_lines = perturbed_file_infos[1]
+
+    transplanted_line_no = int(perturbed_file_infos[2]) - 1
+    original_line = original_file_lines[transplanted_line_no]
+    spaces_count = len(re.match(r'^\s*', original_line).group(0))
+    
+    try:
+        corrupt_splits = corrupt_combined_lines.split(';')
+        corrupt_line_1 = corrupt_splits[0].strip()
+        corrupt_line_2 = corrupt_splits[1].strip()
+
+        if (corrupt_line_1 == '' or corrupt_line_2 == ''):
+            return None 
+        
+        corrupt_line_1 = ' ' * spaces_count + corrupt_line_1 + ';\n'
+        corrupt_line_2 = ' ' * spaces_count + corrupt_line_2 + ';\n'
+
+        corrupt_file_lines[transplanted_line_no] = corrupt_line_1
+        corrupt_file_lines.insert(transplanted_line_no + 1, corrupt_line_2) 
+        return corrupt_file_lines
+    except Exception as e:
+        print(f'Unexpected error: {e}')
+
 if __name__ == '__main__':
     with os.scandir(samples_dir_path) as files:
         for file in files:
@@ -91,6 +116,8 @@ if __name__ == '__main__':
                                 corrupt_file_lines = handle_move_statement_action(perturbed_file_infos, original_file_lines)
                                 if corrupt_file_lines is None:
                                     continue
+                            elif 'P11' in action:
+
                             else:
                                 corrupt_line_code = perturbed_file_infos[1]
                                 corrupt_line_no = int(perturbed_file_infos[2]) - 1
