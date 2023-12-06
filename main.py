@@ -43,29 +43,35 @@ if __name__ == '__main__':
 
                 with open(perturbed_file_path) as pf:
                     perturbed_file_lines = pf.readlines()
+                    # [BugLab_Wrong_Operator]^System.out.println ( "Sum: "  ^  sum ) ;^11^^^^^3^13^System.out.println # issue line
                     print('***start perturbed_file_lines***')
-                    for pfl in perturbed_file_lines:
-                        print(pfl)
+                    print(len(perturbed_file_lines))
                     print('***end perturbed_file_lines***')
-                    for i in range(len(perturbed_file_lines)):
-                        perturbed_file_line = perturbed_file_lines[i]
-                        perturbed_file_infos = perturbed_file_line.split('^')
+                    
+                    try: 
+                        corrupt_files_count = 0
+                        for i in range(len(perturbed_file_lines)):
+                            perturbed_file_line = perturbed_file_lines[i]
+                            perturbed_file_infos = perturbed_file_line.split('^')
 
-                        action = perturbed_file_infos[0]
-                        corrupt_line_code = perturbed_file_infos[1]
-                        corrupt_line_no = int(perturbed_file_infos[2]) - 1
-                        
-                        original_line_code = original_file_lines[corrupt_line_no]
-                        spaces_match = re.match(r'^\s*', original_line_code)
-                        original_line_spaces_count = len(spaces_match.group(0))
+                            action = perturbed_file_infos[0]
+                            corrupt_line_code = perturbed_file_infos[1]
+                            corrupt_line_no = int(perturbed_file_infos[2]) - 1
+                            
+                            original_line_code = original_file_lines[corrupt_line_no]
+                            spaces_match = re.match(r'^\s*', original_line_code)
+                            original_line_spaces_count = len(spaces_match.group(0))
 
-                        corrupt_line_code = ' '*original_line_spaces_count + corrupt_line_code + '\n'
+                            corrupt_line_code = ' '*original_line_spaces_count + corrupt_line_code + '\n'
 
-                        corrupt_file_lines = original_file_lines[:]
-                        corrupt_file_lines[corrupt_line_no] = corrupt_line_code
+                            corrupt_file_lines = original_file_lines[:]
+                            corrupt_file_lines[corrupt_line_no] = corrupt_line_code
 
-                        print('***corrupt file lines***')
-                        print(corrupt_file_lines)
-                        corrupt_file_path = corrupt_dir_path + f'/{i+1}.java'
-                        with open(corrupt_file_path, 'w') as cf:
-                            cf.writelines(''.join(corrupt_file_lines))
+                            print('***corrupt file lines***')
+                            print(corrupt_file_lines)
+                            corrupt_file_path = corrupt_dir_path + f'/{i+1}.java'
+                            with open(corrupt_file_path, 'w') as cf:
+                                cf.writelines(''.join(corrupt_file_lines))
+                            corrupt_files_count += 1
+                    
+                    print(f'corrupt_files_count: {corrupt_files_count}')
