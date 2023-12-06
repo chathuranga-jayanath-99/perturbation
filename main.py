@@ -17,7 +17,7 @@ if __name__ == '__main__':
             if (file.name.endswith('.java')):
                 print(file.name)
                 file_path = samples_dir_path + file.name
-                execution_command = f'{base_command} {file_path} {arg_buglab}'
+                execution_command = f'{base_command} {file_path} {arg_selfapr}'
                 os.system(execution_command)   
 
                 filname_without_ext = file.name.split('.')[0]
