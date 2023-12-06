@@ -10,6 +10,25 @@ arg_buglab = 'BugLab'
 
 base_command = 'timeout 600 java -jar ./perturbation_model/target/perturbation-0.0.1-SNAPSHOT-jar-with-dependencies.jar'
 
+def extract_affected_line_numbers(input_list):
+    result_strings = []
+    for string in input_list:
+        string = string.strip()
+        if string.strip() and string.strip()[0].isdigit():
+            try:
+                int_string = int(string)
+            except Exception as e:
+                print(f'Unexpected error: {e}')
+                continue
+            result_strings.append(int_string)
+    return result_strings[:-2]
+
+def remove_elements_at_indexes(input_list, indexes_to_remove):
+    indexes_to_remove.sort(reverse=True)
+    for index in indexes_to_remove:
+        if 0 <= index < len(input_list):
+            del input_list[index]
+
 def handle_move_statement_action(perturbed_file_infos, original_file_lines):
     corrupt_file_lines = original_file_lines[:]
     corrupt_combined_lines = perturbed_file_infos[1]
@@ -66,6 +85,13 @@ def handle_transplant_statement(perturbed_file_infos, original_file_lines):
     except Exception as e:
         print(f'Unexpected error: {e}')
 
+def handle_delete_statements(perturbed_file_infos, original_file_lines):
+    corrupt_file_lines = original_file_lines[:]
+    delete_line_numbers = extract_affected_line_numbers(perturbed_file_infos)
+    delete_line_indexes = [line_no - 1 for line_no in delete_line_numbers]
+    remove_elements_at_indexes(corrupt_file_lines, delete_line_indexes)
+    return corrupt_file_lines
+
 if __name__ == '__main__':
     with os.scandir(samples_dir_path) as files:
         for file in files:
@@ -116,6 +142,8 @@ if __name__ == '__main__':
                                 corrupt_file_lines = handle_move_statement_action(perturbed_file_infos, original_file_lines)
                             elif 'P11' in action:
                                 corrupt_file_lines = handle_transplant_statement(perturbed_file_infos, original_file_lines)
+                            elif 'P14' in action: 
+                                corrupt_file_lines = handle_delete_statements(perturbed_file_infos, original_file_lines)
                             else:
                                 corrupt_line_code = perturbed_file_infos[1]
                                 corrupt_line_no = int(perturbed_file_infos[2]) - 1
