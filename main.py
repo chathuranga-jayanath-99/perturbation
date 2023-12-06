@@ -114,10 +114,8 @@ if __name__ == '__main__':
                             action = perturbed_file_infos[0]
                             if 'P10' in action:
                                 corrupt_file_lines = handle_move_statement_action(perturbed_file_infos, original_file_lines)
-                                if corrupt_file_lines is None:
-                                    continue
                             elif 'P11' in action:
-
+                                corrupt_file_lines = handle_transplant_statement(perturbed_file_infos, original_file_lines)
                             else:
                                 corrupt_line_code = perturbed_file_infos[1]
                                 corrupt_line_no = int(perturbed_file_infos[2]) - 1
@@ -130,7 +128,9 @@ if __name__ == '__main__':
 
                                 corrupt_file_lines = original_file_lines[:]
                                 corrupt_file_lines[corrupt_line_no] = corrupt_line_code
-
+                            
+                            if corrupt_file_lines is None:
+                                continue
                             # print('***corrupt file lines***')
                             # print(corrupt_file_lines)
                             corrupt_file_path = corrupt_dir_path + f'/{i+1}.java'
