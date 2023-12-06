@@ -20,8 +20,8 @@ def handle_move_statement_action(perturbed_file_infos, original_file_lines):
     original_line_1 = original_file_lines[moved_line_no_1]
     original_line_2 = original_file_lines[moved_line_no_2]
     
-    spaces_count_1 = re.match(r'^\s*', original_line_1)
-    spaces_count_2 = re.match(r'^\s*', original_line_2)
+    spaces_count_1 = len(re.match(r'^\s*', original_line_1).group(0))
+    spaces_count_2 = len(re.match(r'^\s*', original_line_2).group(0))
     
     try:
         corrupt_splits = corrupt_combined_lines.split(';')
